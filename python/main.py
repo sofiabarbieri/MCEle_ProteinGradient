@@ -399,9 +399,9 @@ def main(argv):
         if (drawMovie):
             plots_plk1.FillDrawMovie()
 
-if (drawMovie):
-  plots.DrawMovie("logs/"+date_time)
-  plots_plk1.DrawMovie("logs/"+date_time)
+  if (drawMovie):
+    python main.py -p 1000000 --bound --plk1 --threeD --slice --settings settingsTemplate plots.DrawMovie("logs/"+date_time)
+    plots_plk1.DrawMovie("logs/"+date_time)
 
 if __name__ == "__main__":
    main(sys.argv[1:])   
