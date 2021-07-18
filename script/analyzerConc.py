@@ -8,10 +8,12 @@ from scipy import stats
 
 data = []
 
-def save_data(filename, column1, column2):
+def save_data(filename, column1):
   with open(filename, 'w') as f:
-    for a,b in zip(column1,column2):
-      f.write(str(a)+ "\t" + str(b) + "\n")
+    for a in column1:
+      for b in a:
+        f.write(str(b)+ "\t" )
+      f.write("\n" )
   
 def help_function():
   
@@ -25,12 +27,12 @@ def process_file(filename):
   with open(filename, 'r') as f:
       lines = f.readlines()
       for line in lines:
-        val_temp.append(float(line.replace("\n", "").split()[0]))
+        val_temp.append((line.replace("\n", "").split()))
   return val_temp
   
 def main(argv):
   
-  current_dir = "./"
+  current_dir = "./logs/"
 
   list_dir = []
   
@@ -66,21 +68,20 @@ def main(argv):
     if directory.startswith('.'):
       continue
     directory = (os.path.join(current_dir,directory))
-    print directory
     matrix_val.append(process_file(os.path.join(directory, string_file)))
 
   assert([len(matrix_val[0])==len(i) for i in matrix_val])
-  
-  matrix_val = np.array(matrix_val)
-  print matrix_val
-  print matrix_val.shape
 
+
+  matrix_val = np.array(matrix_val).astype(np.float)
+  
   mean_array = np.mean(matrix_val, axis=0)
   stddev_array = np.std(matrix_val, axis=0) 
-  sem = stats.sem(matrix_val, axis=0, ddof=0)
-  
-  save_data(os.path.join(current_dir,output), mean_array, sem)
-  save_data(os.path.join(current_dir,output), mean_array, stddev_array)
+
+  print(mean_array.shape)
+
+  save_data(os.path.join(current_dir,output+"_mean.txt"), mean_array)
+  save_data(os.path.join(current_dir,output)+"_stddev.txt", stddev_array)
   
 if __name__ == '__main__':
   main(sys.argv[1:])
